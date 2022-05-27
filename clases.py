@@ -12,7 +12,7 @@ class grafo():
         return str(self.listav)
 
     def agregarVertice(self, v):
-        self.listav.appendd(v)
+        self.listav.append(v)
 
     def agregarArista(self, a):
         self.listaA.append(a)

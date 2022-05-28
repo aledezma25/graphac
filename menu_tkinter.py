@@ -1,35 +1,28 @@
+from __future__ import division
+from encodings import utf_8
+from re import sub
+# from tkinter.tix import IMAGETEXT
+from tokenize import PlainToken
+from tracemalloc import start
+from turtle import colormode, position
+import json
+#
+from math import sqrt
+import matplotlib.pyplot as plt
+import networkx as nx
+# 
 from ast import Try
 from lib2to3.pgen2.token import VBAREQUAL
-from ntpath import join
 import os
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 
-from matplotlib.pyplot import draw, fill
+from matplotlib.pyplot import imread, fill
+from PIL import Image, ImageDraw
 from clases import *
 import pymongo
 
-
-#Funcion para abrir archivos
-def abrir_archivos():
-    archivo = filedialog.askopenfilename(title="abrir", initialdir="C:/", filetypes=(("Archivos de Texto", ".txt"),("Archivos Excel",".xlsx"),("Archivos JSON",".json")))
-    print(archivo)
-
-def guardar_archivos():
-    archivo = filedialog.asksaveasfilename(title="Guardar", initialdir="C:/", filetypes=(("Archivos de Texto", ".txt"),("Archivos Excel",".xlsx"),("Archivos JSON",".json")))
-    print(archivo)
-
-#
-#Funcion para abrir el manual de usuario en el apartado de ayuda
-def open_Ayuda_manual():
-    os.startfile(".\Desktop\grafos_python\ayuda\manual_usuario_graphac")
-
-#Funcion para abrir mas sobre grafos en el apartado de ayuda
-def open_Ayuda_Grafos():
-    os.startfile("https://es.wikipedia.org/wiki/Grafo")
-
-    
 #Ventana Principal
 ventana = Tk()
 ventana.geometry("600x600")
@@ -47,40 +40,161 @@ blue = (0, 0, 255)
 red = (255, 0, 0)
 green = (0,128, 0)
 
-width = 550
-height = 570
+width = 350
+height = 390
 center = height//2
 
-#por copiar
-# image1 = image.new()
+image1=Image.new("RGB",(width, height), red)
+image2=Image.new("RGB",(width+120,height+20), red)
+draw = ImageDraw.Draw(image1)
+draw2 =ImageDraw.Draw(image2)
 
 #Crear grafo
 g = grafo()
 l = []
-#
-#
-#
 
-#Informcacion del vertice
-def click(event):
-    for event in g.listav:
-        if event.x > vert.x and event.x < vert.x + ancho and event.y > vert.y and event.y < vert.y + ancho:
-            info = Toplevel()
-            info.title('Informacion del Punto')
-            l1 = Label(info, text='Nombre').grid(row=0, column=0)
-            l2 = Label(info, text=vert.nombre).grid(row=0,column=1)
+#Funcion para abrir archivos
+def abrir_archivos():
+    archivo = filedialog.askopenfilename(title="abrir", initialdir="C:/", filetypes=(("Archivos de Texto", ".txt"),("Archivos Excel",".xlsx"),("Archivos JSON",".json")))
+    print(archivo)
+
+def guardar_archivos():
+    archivo = filedialog.asksaveasfilename(title="Guardar", initialdir="C:/", filetypes=(("Archivos de Texto", ".txt"),("Archivos Excel",".xlsx"),("Archivos JSON",".json")))
+    print(archivo)
+
+def aleatorio():
+    class Dupla: # Se define esta clase dupla para hacer mas sencillo el acceso a los valores X Y de cada nodo o vertice
+        def _init_(self, x, y):
+            self.x = x
+            self.y = y
+    def CalcDis(Dup1, Dup2):# Usando una ecuacion simple calculamos la distancia de cada arista en base a sus vertices
+        return sqrt(pow((Dup1.x - Dup2.x), 2) + pow((Dup1.y - Dup2.y), 2))  # calcula la distancia entre dos puntos
+
+    G = nx.Graph() # Se crea un grafo nulo
+    vertices_G = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']
+    # se crean todos los vertices
+    G.add_nodes_from(vertices_G)# se le asignan dichos vertices o nodos al grafo
+    aristas_G = [('A', 'B'), ('A', 'C'), ('A', 'F'), ('A', 'G'), ('B', 'D'), ('B', 'E'), ('B', 'G'), ('B', 'H'),
+                ('C', 'D'), ('C', 'F'), ('C', 'G'), ('D', 'E'), ('D', 'F'), ('D', 'G'), ('D', 'H'), ('D', 'J'),
+                ('D', 'K'), ('E', 'G'), ('E', 'H'), ('E', 'I'), ('F', 'K'), ('F', 'L'), ('F', 'S'), ('G', 'H'),
+                ('G', 'I'), ('G', 'J'), ('H', 'I'), ('I', 'M'), ('I', 'N'), ('I', 'O'), ('J', 'K'), ('J', 'M'),
+                ('J', 'N'), ('J', 'Q'), ('K', 'L'), ('K', 'Q'), ('L', 'M'), ('L', 'O'), ('L', 'P'), ('L', 'Q'),
+                ('M', 'P'), ('M', 'Q'), ('M', 'R'), ('N', 'O'), ('N', 'T'), ('O', 'J'), ('O', 'Q'), ('O', 'R'),
+                ('O', 'T'), ('P', 'Q'), ('P', 'S'), ('Q', 'J'), ('Q', 'S'), ('R', 'S'), ('R', 'T'), ('S', 'T')]
+    # se crean todas las aristas
+    G.add_edges_from(aristas_G)# se le asignan dichas aristas al grafo
+    ubica = {'A': (2, 1), 'B': (19, 1), 'C': (5, 2), 'D': (11, 3), 'E': (18, 5), 'F': (4, 6), 'G': (12, 7), 'H': (20, 8),
+             'I': (16, 10), 'J': (10, 10), 'K': (7, 11), 'L': (5, 13), 'M': (11, 13), 'N': (19, 14), 'O': (16, 16),
+             'P': (4, 17), 'Q': (9, 17), 'R': (11, 19), 'S': (1, 20), 'T': (20, 20)}
+    #se crea un diccionario con los cada vertice y su ubicacion en el plano X Y
+    puntoA = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoA.x = ubica['A'][0]
+    puntoA.y = ubica['A'][1]
+    puntoB = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoB.x = ubica['B'][0]
+    puntoB.y = ubica['B'][1]
+    puntoC = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoC.x = ubica['C'][0]
+    puntoC.y = ubica['C'][1]
+    puntoD = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoD.x = ubica['D'][0]
+    puntoD.y = ubica['D'][1]
+    puntoE = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoE.x = ubica['E'][0]
+    puntoE.y = ubica['E'][1]
+    puntoF = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoF.x = ubica['F'][0]
+    puntoF.y = ubica['F'][1]
+    puntoG = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoG.x = ubica['G'][0]
+    puntoG.y = ubica['G'][1]
+    puntoH = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoH.x = ubica['H'][0]
+    puntoH.y = ubica['H'][1]
+    puntoI = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoI.x = ubica['I'][0]
+    puntoI.y = ubica['I'][1]
+    puntoJ = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoJ.x = ubica['J'][0]
+    puntoJ.y = ubica['J'][1]
+    puntoK = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoK.x = ubica['K'][0]
+    puntoK.y = ubica['K'][1]
+    puntoL = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoL.x = ubica['L'][0]
+    puntoL.y = ubica['L'][1]
+    puntoM = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoM.x = ubica['M'][0]
+    puntoM.y = ubica['M'][1]
+    puntoN = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoN.x = ubica['N'][0]
+    puntoN.y = ubica['N'][1]
+    puntoO = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoO.x = ubica['O'][0]
+    puntoO.y = ubica['O'][1]
+    puntoP = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoP.x = ubica['P'][0]
+    puntoP.y = ubica['P'][1]
+    puntoQ = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoQ.x = ubica['Q'][0]
+    puntoQ.y = ubica['Q'][1]
+    puntoR = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoR.x = ubica['R'][0]
+    puntoR.y = ubica['R'][1]
+    puntoS = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoS.x = ubica['S'][0]
+    puntoS.y = ubica['S'][1]
+    puntoT = Dupla()# Se asignan los valores X Y de cada vertice extrayendolos del diccionario
+    puntoT.x = ubica['T'][0]
+    puntoT.y = ubica['T'][1]
+    Puntos = {'A': puntoA, 'B': puntoB, 'C': puntoC, 'D': puntoD, 'E': puntoE, 'F': puntoF, 'G': puntoG, 'H': puntoH,
+              'I': puntoI, 'J': puntoJ, 'K': puntoK, 'L': puntoL, 'M': puntoM, 'N': puntoN, 'O': puntoO, 'P': puntoP,
+              'Q': puntoQ, 'R': puntoR, 'S': puntoS, 'T': puntoT}
+    #Se crea un diccionario de los puntos antes creados para tener un acceso mas simple
+    # se crea un contador como iterador de el ciclo for
+    cont: int = 0
+    for i in aristas_G:
+        Pa = Puntos[aristas_G[cont][0]]
+        Pb = Puntos[aristas_G[cont][1]]
+        G.edges[i]['distancia'] = CalcDis(Pa, Pb)*100
+        # se calcula la distancia entre vertices y se multiplica por 100 ya que
+        # cada unidad de nuestro plano vale 100 metros, luego se asigna como peso a cada arista
+        print('La distancia entre ', aristas_G[cont], G.edges[i],'[METROS]')
+        cont = cont + 1
+    nx.draw(G, pos=ubica, node_color='gray', with_labels=True)
+    # se dibuja el grafo
+    plt.show()
 
 
-#Agregar nodo al mapa usando doble click
-def dobleclick(event):
+
+
+#
+#Funcion para abrir el manual de usuario en el apartado de ayuda
+def open_Ayuda_manual():
+    os.startfile(".\Desktop\grafos_python\ayuda\manual_usuario_graphac")
+
+#Funcion para abrir mas sobre grafos en el apartado de ayuda
+def open_Ayuda_Grafos():
+    os.startfile("https://es.wikipedia.org/wiki/Grafo")
+
+
+#Agregar nodo al mapa
+def añadirnodo():
     ingreso = Toplevel()
-    ingreso.title('Agregar Punto')
-    tnombre = Label(ingreso, text='Ingrese nombre del vertice:')
+    ingreso.title('Agregar Nodo')
+    tnombre = Label(ingreso, text='Ingrese nombre del nodo:')
+    px= Label(ingreso, text= "x: ")
+    py= Label(ingreso, text= "y: ")
     tnombre.grid(row=0, column=0)
+    px.grid(row=1, column=0)
+    py.grid(row=2, column=0)
     nombrev = Entry(ingreso)
+    x = Entry(ingreso)
+    y = Entry(ingreso)
     nombrev.grid(row=0, column=1)
-
-    agregar = Button(ingreso, text="Agregar", command=lambda: agregarv(event.x, event.y, nombrev.get(), ingreso))
+    x.grid(row=1, column=1)
+    y.grid(row=2, column=1)
+    agregar = Button(ingreso, text="Agregar", command=lambda: agregarv(x, y, nombrev.get(), ingreso))
     agregar.grid(row=3, columnspan=2)
 
 def agregarv(x, y, nombre, ingreso):
@@ -88,7 +202,6 @@ def agregarv(x, y, nombre, ingreso):
         gradoa = float(100)
         if (gradoa < 1):
             ingreso.destroy()
-            messagebox.showerror("ERROR", "El grado de accidentalidad no está permitido")
         else:
             vtemp = vertice(nombre, x, y)
             g.agregarVertice(vtemp)
@@ -96,7 +209,6 @@ def agregarv(x, y, nombre, ingreso):
             actualizar()
     except ValueError:
         ingreso.destroy()
-        messagebox.showerror("ERROR", "Usted no digitó un grado de accidentalidad correcto")
 
 def AgregarA(frm, to, distancia, x1, y1, x2, y2):
     atemp = arista(frm, to, distancia, x1, y1, x2, y2)
@@ -122,9 +234,9 @@ def clickrelacion():
     relacionar2 = Button(vrelacion, text="Dirigida", command=lambda: relacion(opciones1.get(opciones1.curselection()), 
                                                                               opciones2.get(opciones2.curselection()),nv3.get(), vrelacion))
     relacionar2.pack()
-    relacionar3 = Button(vrelacion, text="No Dirigida", command=lambda: relacion_No_Dirijida(opciones1.get(opciones1.curselection()), 
-                                                                              opciones2.get(opciones2.curselection()),nv3.get(), vrelacion))
-    relacionar3.pack()
+    # relacionar3 = Button(vrelacion, text="No Dirigida", command=lambda: relacion_No_Dirijida(opciones1.get(opciones1.curselection()), 
+                                                                            #   opciones2.get(opciones2.curselection()),nv3.get(), vrelacion))
+    # relacionar3.pack()
 
 def relacion(nv1, nv2, nv3, vrelacion):
     if (nv1 == nv2):
@@ -168,10 +280,10 @@ def actualizar():
     canvas3.delete("all")
     for i in range(len(g.listav)):
         canvas3.create_oval(g.listav[i].x, g.listav[i].y, g.listav[i].x + ancho, g.listav[i].y + ancho, fill="#3498D8", width=0)
-        canvas3.create_oval(g.listav[i].x+5, g.lista[i].y+5, g.lista[i].x + ancho-5, g.listav[i].y + ancho-5, fill="#3498D8", activefill="#E67E22")
+        canvas3.create_oval(g.listav[i].x+5, g.listav[i].y+5, g.listav[i].x + ancho-5, g.listav[i].y + ancho-5, fill="#3498D8", activefill="#E67E22")
 
-        draw.ellipse([g.lista[i].x-120, g.listav[i].y-120, g.listav[i].x-120 + ancho, g.listav[i].y-120 + ancho], fill="#3498D8", outline="green")
-        draw2.ellipse([g.lista[i].x, g.listav[i].y, g.listav[i].x + ancho, g.listav[i].y + ancho], fill="#3498D8", outline="green" )
+        draw.ellipse([g.listav[i].x-120, g.listav[i].y-120, g.listav[i].x-120 + ancho, g.listav[i].y-120 + ancho], fill="#3498D8", outline="green")
+        draw2.ellipse([g.listav[i].x, g.listav[i].y, g.listav[i].x + ancho, g.listav[i].y + ancho], fill="#3498D8", outline="green" )
     
     for i in range(len(g.listaA)):
         if g.listaA[i].x1 >= g.listaA[i].x2 and g.listaA[i].y1 > g.listaA[i].y2:
@@ -188,32 +300,17 @@ def actualizar():
             canvas3.create_line(g.listaA[i].x1 + num, g.listaA[i].y1, g.listaA[i].x2, g.listaA[i].y2 + num, width=3, fill="#A3E4D7", joint=None)
             draw.line([g.listaA[i].x1-120 + num, g.listaA[i].y1-120, g.listaA[i].x2-120, g.listaA[i].y2-120 + num], fill="#A3E4D7", width=3, joint=None)
 
-
-
-
-
-
-
-
-
-
-
-
-canvas3.bind('<Double-1', dobleclick)
-
-
-
-
-
 #Barra de menús
 barraMenu=Menu(ventana)
+
+# canvas3.bind("<Double-1", dobleclick)
 
 #Menu y submenus para Archivo
 menuArchivo=Menu(barraMenu)
     #Submenu del submenu nuevo grafo
 submenu_nuevografo=Menu(menuArchivo, tearoff=False)
 submenu_nuevografo.add_command(label="Personalizado")
-submenu_nuevografo.add_command(label="Aleatorio")
+submenu_nuevografo.add_command(label="Aleatorio", command=aleatorio)
 menuArchivo.add_cascade(label = "Nuevo Grafo", menu=submenu_nuevografo)
 ##########################################
 menuArchivo.add_command(label="Abrir", command=abrir_archivos)
@@ -236,9 +333,9 @@ menuEditar=Menu(barraMenu)
 menuEditar.add_command(label="Deshacer")
     #Submenu del submenu Nodo
 submenu_nodo=Menu(menuEditar, tearoff=False)
-submenu_nodo.add_command(label="Agregar")
+submenu_nodo.add_command(label="Agregar", command=añadirnodo)
 submenu_nodo.add_command(label="Editar")
-submenu_nodo.add_command(label="Eliminar")
+submenu_nodo.add_command(label="Eliminar", command=clickeliminarv)
 menuEditar.add_cascade(label = "Nodo", menu=submenu_nodo)
 ###########################################
 submenu_arco=Menu(menuEditar, tearoff=False)
@@ -282,6 +379,7 @@ barraMenu.add_cascade(label="Herramientas",menu=menuHerramienta)
 barraMenu.add_cascade(label="Aplicacion",menu=menuAplicacion)
 barraMenu.add_cascade(label="Ventana",menu=menuVentana)
 barraMenu.add_cascade(label="Ayuda",menu=menuAyuda)
+
 
 ventana.config(menu=barraMenu)
 
